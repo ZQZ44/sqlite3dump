@@ -57,7 +57,7 @@ class Dumper():
             FROM "sqlite_master"
                 WHERE "sql" NOT NULL AND
                 "type" == 'table' AND
-                "name" == '{0}'
+                "tbl_name" == '{0}'
             """
         schema_res = cu.execute(q.format(table_name))
         for table_name, type, sql in schema_res.fetchall():
@@ -85,9 +85,10 @@ class Dumper():
             SELECT "name", "type", "sql"
             FROM "sqlite_master"
                 WHERE "sql" NOT NULL AND
-                "type" IN ('index', 'trigger', 'view')
+                "type" IN ('index', 'trigger', 'view') AND
+                "tbl_name" == '{0}'
             """
-        schema_res = cu.execute(q)
+        schema_res = cu.execute(q.format(table_name))
         for name, type, sql in schema_res.fetchall():
             yield('{0};'.format(sql))
 
